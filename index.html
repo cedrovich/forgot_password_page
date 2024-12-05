@@ -3,26 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Password</title>
+  <title>Restablece tu contraseña</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .logo {
+      max-width: 200px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      text-align: left;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+    input {
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #message {
+      margin-top: 1rem;
+      color: #333;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>Reset Your Password</h1>
+  <div class="container">
+    <img src="https://pggtliopkuymentnklow.supabase.co/storage/v1/object/public/post_events/logo_trio.png" alt="Logo" class="logo">
+    <h1>Restablece tu contraseña</h1>
 
-  <!-- Formulario para ingresar nueva contraseña -->
-  <form id="reset-password-form">
-    <label for="new-password">New Password:</label>
-    <input type="password" id="new-password" name="new-password" required>
-    <button type="submit">Reset Password</button>
-  </form>
+    <form id="reset-password-form">
+      <label for="new-password">Nueva Contraseña:</label>
+      <input type="password" id="new-password" name="new-password" required>
+      <button type="submit">Restablecer Contraseña</button>
+    </form>
 
-  <div id="message"></div>
+    <div id="message"></div>
+  </div>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     // Configuración de Supabase
     const supabaseUrl = 'https://pggtliopkuymentnklow.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnZ3RsaW9wa3V5bWVudG5rbG93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MzE4OTcsImV4cCI6MjA0ODIwNzg5N30.HO87zVfpPOwBh0Cj0YVp2LowCHM750W49tbSmNkzfYQ'; // Reemplaza con tu clave pública
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnZ3RsaW9wa3V5bWVudG5rbG93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MzE4OTcsImV4cCI6MjA0ODIwNzg5N30.HO87zVfpPOwBh0Cj0YVp2LowCHM750W49tbSmNkzfYQ';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Captura el token de la URL
@@ -31,7 +96,7 @@
 
     // Si no hay token, muestra un error
     if (!accessToken) {
-      document.getElementById('message').innerText = 'Error: Invalid or missing token.';
+      document.getElementById('message').innerText = 'Error: Token inválido o faltante.';
       document.getElementById('reset-password-form').style.display = 'none';
     }
 
@@ -44,20 +109,20 @@
       try {
         const { error } = await supabase.auth.updateUser(
           { password: newPassword },
-          { accessToken } // Usa el token capturado
+          { accessToken }
         );
 
         if (error) {
-          console.error('Error resetting password:', error);
+          console.error('Error al restablecer la contraseña:', error);
           document.getElementById('message').innerText = `Error: ${error.message}`;
         } else {
-          console.log('Password reset successfully');
-          document.getElementById('message').innerText = 'Password reset successfully!';
+          console.log('Contraseña restablecida con éxito');
+          document.getElementById('message').innerText = '¡Contraseña restablecida con éxito!';
           document.getElementById('reset-password-form').style.display = 'none';
         }
       } catch (err) {
-        console.error('Unexpected error:', err);
-        document.getElementById('message').innerText = `Unexpected Error: ${err.message}`;
+        console.error('Error inesperado:', err);
+        document.getElementById('message').innerText = `Error inesperado: ${err.message}`;
       }
     }
 
@@ -66,3 +131,4 @@
   </script>
 </body>
 </html>
+
