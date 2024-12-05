@@ -27,7 +27,7 @@
 
     // Captura el token de la URL
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
+    const accessToken = urlParams.get('code');
 
     // Si no hay token, muestra un error
     if (!accessToken) {
