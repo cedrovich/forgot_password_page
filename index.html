@@ -88,45 +88,58 @@
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
+  
     // Configuración de Supabase
     const supabaseUrl = 'https://pggtliopkuymentnklow.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnZ3RsaW9wa3V5bWVudG5rbG93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MzE4OTcsImV4cCI6MjA0ODIwNzg5N30.HO87zVfpPOwBh0Cj0YVp2LowCHM750W49tbSmNkzfYQ';
     const supabase = createClient(supabaseUrl, supabaseKey);
-
+  
     // Función para verificar el OTP y restablecer la contraseña
     async function resetPassword(event) {
       event.preventDefault();
-
+  
       const email = document.getElementById('email').value;
       const otp = document.getElementById('otp').value;
       const newPassword = document.getElementById('new-password').value;
-
+  
       try {
-        // Verifica el OTP y actualiza la contraseña
-        const { error } = await supabase.auth.verifyOtp({
+        // Verifica el OTP
+        const { error: otpError } = await supabase.auth.verifyOtp({
           email,
           token: otp,
           type: 'recovery',
+        });
+  
+        if (otpError) {
+          console.error('Error al verificar el OTP:', otpError);
+          document.getElementById('message').innerText = `Error: ${otpError.message}`;
+          return;
+        }
+  
+        // Actualiza la contraseña
+        const { error: updateError } = await supabase.auth.updateUser({
+          email,
           password: newPassword,
         });
-
-        if (error) {
-          console.error('Error al restablecer la contraseña:', error);
-          document.getElementById('message').innerText = `Error: ${error.message}`;
-        } else {
-          console.log('Contraseña restablecida con éxito');
-          document.getElementById('message').innerText = '¡Contraseña restablecida con éxito!';
-          document.getElementById('reset-password-form').style.display = 'none';
+  
+        if (updateError) {
+          console.error('Error al actualizar la contraseña:', updateError);
+          document.getElementById('message').innerText = `Error: ${updateError.message}`;
+          return;
         }
+  
+        console.log('Contraseña restablecida con éxito');
+        document.getElementById('message').innerText = '¡Contraseña restablecida con éxito!';
+        document.getElementById('reset-password-form').style.display = 'none';
       } catch (err) {
         console.error('Error inesperado:', err);
         document.getElementById('message').innerText = `Error inesperado: ${err.message}`;
       }
     }
-
+  
     // Asigna la función al formulario
     document.getElementById('reset-password-form').addEventListener('submit', resetPassword);
   </script>
+  
 </body>
 </html>
